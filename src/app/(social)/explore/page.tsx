@@ -1,12 +1,8 @@
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 
 export default function ExplorePage() {
   return (
-    <main className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar />
-
+    <div className="w-full pb-12">
       <section className="border-b border-muted bg-muted/20 py-12">
         <div className="mx-auto max-w-7xl px-6">
           <h1 className="text-4xl font-extrabold tracking-tight mb-4">Explore Results</h1>
@@ -99,7 +95,6 @@ export default function ExplorePage() {
         </div>
       </section>
 
-      <Footer />
-    </main>
+    </div>
   );
 }

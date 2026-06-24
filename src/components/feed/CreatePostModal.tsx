@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type PostType = "UPDATE" | "COMPLAINT" | "POLL";
 
@@ -13,6 +13,17 @@ interface CreatePostModalProps {
 export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE" }: CreatePostModalProps) {
   const [activeTab, setActiveTab] = useState<PostType>(defaultType);
   const [pollOptions, setPollOptions] = useState(["", ""]);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
