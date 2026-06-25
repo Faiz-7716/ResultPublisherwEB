@@ -191,7 +191,7 @@ export default function NotificationsPage() {
                   {/* Avatar & Badge */}
                   <div className="relative shrink-0 mt-1">
                     <div className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-lg text-white shadow-sm border border-muted/20 transition-transform duration-300 group-hover:scale-105 ${
-                      notif.avatar.match(/[\up{Emoji}]/u) ? "bg-transparent text-3xl" : notif.color
+                      notif.avatar.match(/[^\x00-\x7F]/) ? "bg-transparent text-3xl" : notif.color
                     }`}>
                       {notif.avatar}
                     </div>
