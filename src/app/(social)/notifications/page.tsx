@@ -28,7 +28,7 @@ export default function NotificationsPage() {
         category: "EDUCATION",
         categoryColor: "bg-blue-500",
         preview: "TNPSC Result Analysis",
-        avatar: "❤️", 
+        avatar: <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>, 
         color: "bg-pink-500", 
         icon: null
       },
@@ -43,7 +43,7 @@ export default function NotificationsPage() {
         category: "GOVERNMENT",
         categoryColor: "bg-emerald-500",
         preview: "TNPSC Group 4 Analysis • 23,456 Records",
-        avatar: "📊", 
+        avatar: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>, 
         color: "bg-amber-500", 
         icon: null
       }
@@ -75,7 +75,7 @@ export default function NotificationsPage() {
         category: "TECHNOLOGY",
         categoryColor: "bg-purple-500",
         preview: null,
-        avatar: "🔴", 
+        avatar: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><circle cx="12" cy="11" r="3"></circle></svg>, 
         color: "bg-red-500", 
         icon: null
       }
@@ -149,9 +149,24 @@ export default function NotificationsPage() {
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 relative z-10 w-full sm:w-auto">
                <span className="bg-primary/10 text-primary border border-primary/20 text-[10px] font-bold uppercase px-2 py-0.5 rounded-md tracking-wider w-fit">Today's Highlights</span>
                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] font-semibold text-foreground/80">
-                  <span className="flex items-center gap-1.5"><span className="text-pink-500">❤️</span> 5 likes</span>
-                  <span className="flex items-center gap-1.5"><span className="text-emerald-500">👥</span> 2 followers</span>
-                  <span className="flex items-center gap-1.5"><span className="text-blue-500">📊</span> 1 poll (34 votes)</span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-pink-500 flex items-center justify-center w-4 h-4">
+                       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    </span> 
+                    5 likes
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-emerald-500 flex items-center justify-center w-4 h-4">
+                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </span> 
+                    2 followers
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-blue-500 flex items-center justify-center w-4 h-4">
+                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
+                    </span> 
+                    1 poll (34 votes)
+                  </span>
                </div>
             </div>
             <button className="text-[11px] sm:text-xs font-bold text-primary hover:underline relative z-10 self-start sm:self-auto shrink-0 hidden sm:block">View details</button>
