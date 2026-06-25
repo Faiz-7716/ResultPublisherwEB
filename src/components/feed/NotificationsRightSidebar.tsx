@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-export default function NotificationsRightSidebar() {
+export default function NotificationsRightSidebar({ className = "" }: { className?: string }) {
   return (
-    <aside className="sticky top-[88px] flex-col gap-6 hidden xl:flex h-[calc(100vh-88px)] w-full overflow-y-auto hide-scrollbar pb-6 pt-5">
+    <aside className={`flex flex-col gap-6 w-full pb-6 pt-5 ${className}`}>
       
       {/* SaaS Unified Dashboard Widget */}
       <div className="bg-background rounded-2xl border border-muted shadow-sm overflow-hidden flex flex-col">

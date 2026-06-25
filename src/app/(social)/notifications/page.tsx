@@ -7,6 +7,7 @@ export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState("All");
 
   const tabs = [
+    { name: "Activity", count: null, mobileOnly: true },
     { name: "All", count: 126 },
     { name: "Mentions", count: 8 },
     { name: "Alerts", count: 24 },
@@ -178,113 +179,121 @@ export default function NotificationsPage() {
                <button 
                  key={tab.name}
                  onClick={() => setActiveTab(tab.name)}
-                 className={`px-4 py-1.5 flex items-center gap-1.5 font-semibold text-[13px] transition-all rounded-md whitespace-nowrap ${
+                 className={`px-4 py-1.5 flex items-center gap-1.5 font-semibold text-[13px] transition-all rounded-md whitespace-nowrap ${tab.mobileOnly ? 'xl:hidden' : ''} ${
                    activeTab === tab.name 
                      ? "bg-primary text-white shadow-sm" 
                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
                  }`}
                >
                  {tab.name}
-                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeTab === tab.name ? 'bg-white/20 text-white' : 'bg-muted-foreground/10 text-muted-foreground'}`}>
-                   {tab.count}
-                 </span>
+                 {tab.count !== null && (
+                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeTab === tab.name ? 'bg-white/20 text-white' : 'bg-muted-foreground/10 text-muted-foreground'}`}>
+                     {tab.count}
+                   </span>
+                 )}
                </button>
              ))}
           </div>
         </div>
 
-        {/* Timeline Grouped Notifications */}
-        <div className="flex flex-col">
-          {Object.entries(groupedNotifications).map(([timeGroup, notifs]) => (
-            <div key={timeGroup}>
-              {/* Timeline Header (Non-sticky) */}
-              <div className="px-6 py-2 bg-background border-b border-muted">
-                <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">{timeGroup}</h3>
-              </div>
-              
-              {/* Notification Mini Cards */}
-              {notifs.map(notif => (
-                <div 
-                  key={notif.id} 
-                  className={`relative p-4 px-6 border-b border-muted/50 hover:bg-muted/20 cursor-pointer flex gap-4 transition-all duration-200 group ${notif.read ? '' : 'bg-primary/5'}`}
-                >
-                  {/* Importance Color Indicator */}
-                  <div className={`absolute left-0 top-0 bottom-0 w-[3px] ${getImportanceColor(notif.importance)}`}></div>
-                  
-                  {/* Avatar & Badge */}
-                  <div className="relative shrink-0 mt-0.5">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-base text-white shadow-sm border border-muted/20 transition-transform duration-200 group-hover:scale-105 ${
-                      typeof notif.avatar === 'string' && notif.avatar.match(/[^\x00-\x7F]/) ? "bg-transparent text-2xl" : notif.color
-                    }`}>
-                      {notif.avatar}
-                    </div>
-                    {notif.icon && (
-                      <div className={`absolute -bottom-1 -right-1 w-[18px] h-[18px] rounded-full flex items-center justify-center border-2 border-background shadow-sm ${notif.color}`}>
-                         {notif.icon}
+        {/* Tab Content Rendering */}
+        {activeTab === 'Activity' ? (
+          <div className="px-4 sm:px-6 xl:hidden animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <NotificationsRightSidebar />
+          </div>
+        ) : (
+          <div className="flex flex-col">
+            {Object.entries(groupedNotifications).map(([timeGroup, notifs]) => (
+              <div key={timeGroup}>
+                {/* Timeline Header (Non-sticky) */}
+                <div className="px-6 py-2 bg-background border-b border-muted">
+                  <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">{timeGroup}</h3>
+                </div>
+                
+                {/* Notification Mini Cards */}
+                {notifs.map(notif => (
+                  <div 
+                    key={notif.id} 
+                    className={`relative p-4 px-6 border-b border-muted/50 hover:bg-muted/20 cursor-pointer flex gap-4 transition-all duration-200 group ${notif.read ? '' : 'bg-primary/5'}`}
+                  >
+                    {/* Importance Color Indicator */}
+                    <div className={`absolute left-0 top-0 bottom-0 w-[3px] ${getImportanceColor(notif.importance)}`}></div>
+                    
+                    {/* Avatar & Badge */}
+                    <div className="relative shrink-0 mt-0.5">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-base text-white shadow-sm border border-muted/20 transition-transform duration-200 group-hover:scale-105 ${
+                        typeof notif.avatar === 'string' && notif.avatar.match(/[^\x00-\x7F]/) ? "bg-transparent text-2xl" : notif.color
+                      }`}>
+                        {notif.avatar}
                       </div>
-                    )}
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="flex-1 pt-0">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        {/* Title Row */}
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className={`text-[9px] font-black uppercase tracking-widest ${notif.categoryColor.replace('bg-', 'text-')}`}>
-                            {notif.category}
-                          </span>
+                      {notif.icon && (
+                        <div className={`absolute -bottom-1 -right-1 w-[18px] h-[18px] rounded-full flex items-center justify-center border-2 border-background shadow-sm ${notif.color}`}>
+                           {notif.icon}
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="flex-1 pt-0">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          {/* Title Row */}
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className={`text-[9px] font-black uppercase tracking-widest ${notif.categoryColor.replace('bg-', 'text-')}`}>
+                              {notif.category}
+                            </span>
+                          </div>
+
+                          <p className="text-[14px] leading-snug font-semibold text-foreground">
+                            {notif.user} <span className="font-normal text-muted-foreground">{notif.text}</span>
+                          </p>
+                          
+                          {/* Rich Preview Snippet */}
+                          {notif.preview && (
+                            <div className="mt-1.5">
+                              <p className="text-[13px] font-normal text-foreground/90 line-clamp-2">{notif.preview}</p>
+                            </div>
+                          )}
+                          
+                          <p className="text-[12px] text-muted-foreground mt-1.5 font-medium flex items-center gap-1.5">
+                             {notif.timeAgo}
+                          </p>
                         </div>
 
-                        <p className="text-[14px] leading-snug font-semibold text-foreground">
-                          {notif.user} <span className="font-normal text-muted-foreground">{notif.text}</span>
-                        </p>
-                        
-                        {/* Rich Preview Snippet */}
-                        {notif.preview && (
-                          <div className="mt-1.5">
-                            <p className="text-[13px] font-normal text-foreground/90 line-clamp-2">{notif.preview}</p>
-                          </div>
-                        )}
-                        
-                        <p className="text-[12px] text-muted-foreground mt-1.5 font-medium flex items-center gap-1.5">
-                           {notif.timeAgo}
-                        </p>
-                      </div>
-
-                      {/* Right Side Actions & Unread */}
-                      <div className="shrink-0 flex items-center gap-2">
-                         {/* Hover Actions */}
-                         <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-background/80 backdrop-blur-sm border border-muted shadow-sm rounded-lg overflow-hidden">
-                           <button className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors border-r border-muted" title="Mark read">
-                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                           </button>
-                           <button className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors border-r border-muted" title="Archive">
-                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
-                           </button>
-                           <button className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" title="More">
-                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                           </button>
-                         </div>
-                         
-                         {/* Unread Indicator */}
-                         {!notif.read && (
-                           <div className="w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(var(--primary),0.6)] ml-2"></div>
-                         )}
+                        {/* Right Side Actions & Unread */}
+                        <div className="shrink-0 flex items-center gap-2">
+                           {/* Hover Actions */}
+                           <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-background/80 backdrop-blur-sm border border-muted shadow-sm rounded-lg overflow-hidden">
+                             <button className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors border-r border-muted" title="Mark read">
+                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                             </button>
+                             <button className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors border-r border-muted" title="Archive">
+                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+                             </button>
+                             <button className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" title="More">
+                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                             </button>
+                           </div>
+                           
+                           {/* Unread Indicator */}
+                           {!notif.read && (
+                             <div className="w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(var(--primary),0.6)] ml-2"></div>
+                           )}
+                        </div>
                       </div>
                     </div>
+                    
                   </div>
-                  
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       
-      {/* 22% Right Panel (Adjusted using flex-1 with a fixed minimum equivalent) */}
+      {/* 22% Right Panel (Desktop Only) */}
       <div className="hidden xl:block w-[35%] pl-8">
-         <NotificationsRightSidebar />
+         <NotificationsRightSidebar className="sticky top-[88px] h-[calc(100vh-88px)] overflow-y-auto hide-scrollbar" />
       </div>
     </div>
   );
