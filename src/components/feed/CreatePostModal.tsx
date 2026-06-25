@@ -29,6 +29,10 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
   // Poll Settings
   const [allowMultiVote, setAllowMultiVote] = useState(false);
   
+  // Media Upload
+  const [mediaPreview, setMediaPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
   const audienceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,6 +41,9 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
       // Reset state if needed when opened
     } else {
       document.body.style.overflow = "unset";
+      // Clear media when closed
+      if (mediaPreview) URL.revokeObjectURL(mediaPreview);
+      setMediaPreview(null);
     }
     return () => {
       document.body.style.overflow = "unset";
@@ -66,6 +73,23 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
       const newOptions = [...pollOptions];
       newOptions.splice(index, 1);
       setPollOptions(newOptions);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Create a local URL for preview
+      const previewUrl = URL.createObjectURL(file);
+      setMediaPreview(previewUrl);
+    }
+  };
+
+  const handleRemoveMedia = () => {
+    if (mediaPreview) URL.revokeObjectURL(mediaPreview);
+    setMediaPreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -149,6 +173,20 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
               className={`w-full resize-none bg-transparent border-none outline-none text-xl placeholder:text-muted-foreground min-h-[140px] transition-colors ${isOverLimit ? 'text-danger' : 'text-foreground'}`}
               aria-label="Post Body"
             />
+            
+            {/* Global Media Preview */}
+            {mediaPreview && (
+              <div className="relative mb-4 animate-in fade-in zoom-in-95 duration-200">
+                <img src={mediaPreview} alt="Media preview" className="w-full max-h-[300px] object-cover rounded-xl border border-muted" />
+                <button 
+                  onClick={handleRemoveMedia} 
+                  className="absolute top-2 right-2 p-1.5 bg-foreground/70 hover:bg-foreground text-background rounded-full transition-colors backdrop-blur-sm"
+                  aria-label="Remove media"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+              </div>
+            )}
 
             {/* Complaint Specific Fields */}
             {activeTab === "COMPLAINT" && (
@@ -185,12 +223,6 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
                       </button>
                     ))}
                   </div>
-                </div>
-
-                <div className="border-2 border-dashed border-muted-foreground/30 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-muted/30 transition-colors">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground mb-3"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                  <span className="text-base font-bold text-foreground">Add Photo/Video Evidence</span>
-                  <span className="text-sm text-muted-foreground mt-1">Drag and drop or click to upload</span>
                 </div>
               </div>
             )}
@@ -287,9 +319,25 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
              </button>
              <div className="w-px h-8 bg-muted mx-1 self-center"></div>
-             <button aria-label="Add Media" className="p-3 text-muted-foreground hover:bg-muted rounded-full transition-colors" title="Add Media">
-               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-             </button>
+             
+             {/* Add Media Button */}
+             <div className="relative">
+               <input 
+                 type="file" 
+                 ref={fileInputRef} 
+                 onChange={handleFileChange} 
+                 accept="image/*,video/*" 
+                 className="hidden" 
+               />
+               <button 
+                 onClick={() => fileInputRef.current?.click()} 
+                 aria-label="Add Media" 
+                 className="p-3 text-muted-foreground hover:bg-primary hover:text-white rounded-full transition-colors" 
+                 title="Add Media"
+               >
+                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+               </button>
+             </div>
            </div>
            
            <div className="flex items-center gap-4">
