@@ -29,9 +29,10 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
   // Poll Settings
   const [allowMultiVote, setAllowMultiVote] = useState(false);
   
-  // Media Upload
-  const [mediaPreview, setMediaPreview] = useState<string | null>(null);
+  // Media Upload (Multiple)
+  const [mediaPreviews, setMediaPreviews] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const MAX_MEDIA = 4;
   
   const audienceRef = useRef<HTMLDivElement>(null);
 
@@ -42,8 +43,8 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
     } else {
       document.body.style.overflow = "unset";
       // Clear media when closed
-      if (mediaPreview) URL.revokeObjectURL(mediaPreview);
-      setMediaPreview(null);
+      mediaPreviews.forEach(url => URL.revokeObjectURL(url));
+      setMediaPreviews([]);
     }
     return () => {
       document.body.style.overflow = "unset";
@@ -77,23 +78,37 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Create a local URL for preview
-      const previewUrl = URL.createObjectURL(file);
-      setMediaPreview(previewUrl);
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      // Calculate how many more we can add
+      const availableSlots = MAX_MEDIA - mediaPreviews.length;
+      const filesToAdd = files.slice(0, availableSlots);
+      
+      const newPreviews = filesToAdd.map(file => URL.createObjectURL(file));
+      setMediaPreviews(prev => [...prev, ...newPreviews]);
+      
+      // Reset input value so the same file can be selected again if removed
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
-  const handleRemoveMedia = () => {
-    if (mediaPreview) URL.revokeObjectURL(mediaPreview);
-    setMediaPreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+  const handleRemoveMedia = (indexToRemove: number) => {
+    URL.revokeObjectURL(mediaPreviews[indexToRemove]);
+    setMediaPreviews(prev => prev.filter((_, idx) => idx !== indexToRemove));
   };
 
   const isOverLimit = postText.length > maxChars;
+
+  // Compute grid layout classes for media
+  const getMediaGridClass = (count: number) => {
+    if (count === 1) return "grid-cols-1";
+    if (count === 2) return "grid-cols-2";
+    if (count === 3) return "grid-cols-2"; // First gets col-span-2, others get 1
+    if (count >= 4) return "grid-cols-2 grid-rows-2";
+    return "grid-cols-1";
+  };
 
   return (
     <div 
@@ -174,17 +189,30 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
               aria-label="Post Body"
             />
             
-            {/* Global Media Preview */}
-            {mediaPreview && (
-              <div className="relative mb-4 animate-in fade-in zoom-in-95 duration-200">
-                <img src={mediaPreview} alt="Media preview" className="w-full max-h-[300px] object-cover rounded-xl border border-muted" />
-                <button 
-                  onClick={handleRemoveMedia} 
-                  className="absolute top-2 right-2 p-1.5 bg-foreground/70 hover:bg-foreground text-background rounded-full transition-colors backdrop-blur-sm"
-                  aria-label="Remove media"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
+            {/* Global Media Preview - Multiple Grid Layout */}
+            {mediaPreviews.length > 0 && (
+              <div className={`grid gap-2 mb-4 animate-in fade-in zoom-in-95 duration-200 ${getMediaGridClass(mediaPreviews.length)}`}>
+                {mediaPreviews.map((preview, index) => (
+                  <div 
+                    key={preview} 
+                    className={`relative w-full h-full min-h-[150px] max-h-[300px] overflow-hidden rounded-xl border border-muted ${
+                      mediaPreviews.length === 3 && index === 0 ? "col-span-2 row-span-2" : ""
+                    }`}
+                  >
+                    <img 
+                      src={preview} 
+                      alt={`Media preview ${index + 1}`} 
+                      className="w-full h-full object-cover" 
+                    />
+                    <button 
+                      onClick={() => handleRemoveMedia(index)} 
+                      className="absolute top-2 right-2 p-1.5 bg-foreground/70 hover:bg-foreground text-background rounded-full transition-colors backdrop-blur-sm z-10"
+                      aria-label="Remove media"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
 
@@ -327,12 +355,22 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
                  ref={fileInputRef} 
                  onChange={handleFileChange} 
                  accept="image/*,video/*" 
+                 multiple
                  className="hidden" 
                />
                <button 
-                 onClick={() => fileInputRef.current?.click()} 
+                 onClick={() => {
+                   if (mediaPreviews.length < MAX_MEDIA) {
+                     fileInputRef.current?.click();
+                   }
+                 }} 
+                 disabled={mediaPreviews.length >= MAX_MEDIA}
                  aria-label="Add Media" 
-                 className="p-3 text-muted-foreground hover:bg-primary hover:text-white rounded-full transition-colors" 
+                 className={`p-3 rounded-full transition-colors ${
+                   mediaPreviews.length >= MAX_MEDIA 
+                     ? 'text-muted-foreground/30 cursor-not-allowed' 
+                     : 'text-muted-foreground hover:bg-primary hover:text-white'
+                 }`}
                  title="Add Media"
                >
                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
