@@ -214,7 +214,7 @@ export default function NotificationsPage() {
                   {/* Avatar & Badge */}
                   <div className="relative shrink-0 mt-0.5">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-base text-white shadow-sm border border-muted/20 transition-transform duration-200 group-hover:scale-105 ${
-                      notif.avatar.match(/[^\x00-\x7F]/) ? "bg-transparent text-2xl" : notif.color
+                      typeof notif.avatar === 'string' && notif.avatar.match(/[^\x00-\x7F]/) ? "bg-transparent text-2xl" : notif.color
                     }`}>
                       {notif.avatar}
                     </div>
