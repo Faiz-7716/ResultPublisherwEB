@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import RightSidebar from "@/components/feed/RightSidebar";
 
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState("All");
@@ -17,8 +16,8 @@ export default function NotificationsPage() {
   ];
 
   return (
-    <div className="flex lg:gap-12 w-full">
-      <div className="flex-1 max-w-2xl min-w-0 border-x border-muted min-h-screen bg-background">
+    <div className="flex w-full">
+      <div className="flex-1 max-w-4xl mx-auto min-w-0 border-x border-muted min-h-screen bg-background">
         
         {/* Header */}
         <div className="sticky top-[88px] lg:top-0 z-10 bg-background/85 backdrop-blur-xl border-b border-muted flex flex-col pt-4">
@@ -102,11 +101,6 @@ export default function NotificationsPage() {
           You've caught up on all notifications!
         </div>
 
-      </div>
-      
-      {/* Right Sidebar */}
-      <div className="hidden lg:block w-[350px]">
-         <RightSidebar />
       </div>
     </div>
   );
