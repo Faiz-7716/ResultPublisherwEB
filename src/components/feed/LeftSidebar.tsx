@@ -43,7 +43,7 @@ export default function LeftSidebar() {
       <aside className="sticky top-[88px] hidden lg:block h-[calc(100vh-88px)] w-[88px] z-40">
         
         {/* Hover Drawer Container */}
-        <div className="absolute top-0 left-0 h-full w-[88px] hover:w-64 bg-background transition-all duration-300 ease-in-out overflow-y-auto overflow-x-hidden hide-scrollbar flex flex-col group hover:shadow-2xl border-r border-transparent hover:border-muted z-50 rounded-r-2xl pb-6">
+        <div className="absolute top-0 left-0 h-full w-[88px] hover:w-64 bg-background transition-all duration-300 ease-in-out overflow-y-auto overflow-x-hidden hide-scrollbar flex flex-col group border-r border-muted z-50 pb-6">
           
           {/* Navigation */}
           <nav className="flex flex-col gap-2 mt-2 px-3">
