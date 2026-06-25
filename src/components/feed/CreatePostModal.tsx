@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 type PostType = "UPDATE" | "COMPLAINT" | "POLL";
 
@@ -13,10 +13,28 @@ interface CreatePostModalProps {
 export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE" }: CreatePostModalProps) {
   const [activeTab, setActiveTab] = useState<PostType>(defaultType);
   const [pollOptions, setPollOptions] = useState(["", ""]);
+  
+  // Text & Characters
+  const [postText, setPostText] = useState("");
+  const maxChars = 500;
+  
+  // Audience
+  const [audience, setAudience] = useState("Public");
+  const [isAudienceOpen, setIsAudienceOpen] = useState(false);
+  const audienceOptions = ["Public", "Verified Users", "Organizations Only"];
+  
+  // Complaint Settings
+  const [priority, setPriority] = useState("Normal");
+  
+  // Poll Settings
+  const [allowMultiVote, setAllowMultiVote] = useState(false);
+  
+  const audienceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      // Reset state if needed when opened
     } else {
       document.body.style.overflow = "unset";
     }
@@ -24,6 +42,16 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (audienceRef.current && !audienceRef.current.contains(event.target as Node)) {
+        setIsAudienceOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   if (!isOpen) return null;
 
@@ -41,16 +69,23 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
     }
   };
 
+  const isOverLimit = postText.length > maxChars;
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/20 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+    <div 
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/30 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
       
       {/* Modal Container */}
       <div className="bg-background w-full max-w-[600px] rounded-2xl shadow-2xl border border-muted flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-muted">
-          <h2 className="text-xl font-bold text-foreground">Create a post</h2>
-          <button onClick={onClose} className="p-2 -mr-2 text-muted-foreground hover:bg-muted rounded-full transition-colors">
+          <h2 id="modal-title" className="text-xl font-bold text-foreground">Create a post</h2>
+          <button onClick={onClose} aria-label="Close Modal" className="p-2 -mr-2 text-muted-foreground hover:bg-muted rounded-full transition-colors">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
         </div>
@@ -62,11 +97,39 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
           </div>
           <div>
             <h4 className="font-bold text-lg text-foreground leading-tight mb-1">Alex User</h4>
-            <button className="flex items-center gap-1 border border-muted rounded-full px-3 py-1.5 text-sm font-semibold hover:bg-muted transition-colors text-foreground">
-               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-               Anyone
-               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
+            
+            {/* Audience Dropdown */}
+            <div className="relative" ref={audienceRef}>
+              <button 
+                onClick={() => setIsAudienceOpen(!isAudienceOpen)}
+                aria-haspopup="listbox"
+                aria-expanded={isAudienceOpen}
+                className="flex items-center gap-1 border border-muted rounded-full px-3 py-1.5 text-sm font-semibold hover:bg-muted transition-colors text-primary bg-primary/5"
+              >
+                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                 {audience}
+                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`transition-transform ${isAudienceOpen ? 'rotate-180' : ''}`}><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              
+              {isAudienceOpen && (
+                <ul 
+                  role="listbox"
+                  className="absolute left-0 mt-2 w-48 bg-background border border-muted rounded-xl shadow-lg z-20 py-2 animate-in fade-in slide-in-from-top-2"
+                >
+                  {audienceOptions.map(opt => (
+                    <li 
+                      key={opt}
+                      role="option"
+                      aria-selected={audience === opt}
+                      onClick={() => { setAudience(opt); setIsAudienceOpen(false); }}
+                      className={`px-4 py-2 text-sm font-medium cursor-pointer hover:bg-muted ${audience === opt ? 'text-primary bg-primary/5' : 'text-foreground'}`}
+                    >
+                      {opt}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
 
@@ -75,21 +138,55 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
            
             {/* Text Area (Common to all) */}
             <textarea 
+              autoFocus
+              value={postText}
+              onChange={(e) => setPostText(e.target.value)}
               placeholder={
                 activeTab === "UPDATE" ? "What do you want to talk about?" :
                 activeTab === "COMPLAINT" ? "Describe the issue in detail..." :
                 "Ask a question..."
               }
-              className="w-full resize-none bg-transparent border-none outline-none text-xl placeholder:text-muted-foreground min-h-[140px] text-foreground"
+              className={`w-full resize-none bg-transparent border-none outline-none text-xl placeholder:text-muted-foreground min-h-[140px] transition-colors ${isOverLimit ? 'text-danger' : 'text-foreground'}`}
+              aria-label="Post Body"
             />
 
             {/* Complaint Specific Fields */}
             {activeTab === "COMPLAINT" && (
               <div className="space-y-4 animate-in fade-in slide-in-from-top-2 mb-4">
-                <div className="flex items-center gap-3 border border-muted rounded-xl px-4 py-3 bg-muted/30 focus-within:border-primary focus-within:bg-background transition-colors">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-500"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                  <input type="text" placeholder="Add location (e.g. OMR Road, Chennai)" className="bg-transparent border-none outline-none flex-1 text-base font-medium text-foreground" />
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div className="flex items-center gap-3 border border-muted rounded-xl px-4 py-3 bg-muted/30 focus-within:border-primary focus-within:bg-background transition-colors">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-500 shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <input type="text" placeholder="Location (e.g. OMR Road)" aria-label="Location" className="bg-transparent border-none outline-none w-full text-sm font-medium text-foreground" />
+                  </div>
+                  
+                  <div className="flex items-center gap-3 border border-muted rounded-xl px-4 py-3 bg-muted/30 focus-within:border-primary focus-within:bg-background transition-colors">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-500 shrink-0"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+                    <input type="text" placeholder="Target Department (@Agency)" aria-label="Target Department" className="bg-transparent border-none outline-none w-full text-sm font-medium text-foreground" />
+                  </div>
                 </div>
+
+                <div className="flex items-center gap-4 py-2">
+                  <span className="text-sm font-semibold text-muted-foreground">Priority Level:</span>
+                  <div className="flex gap-2 bg-muted/30 p-1 rounded-xl">
+                    {["Normal", "High", "Critical"].map(level => (
+                      <button 
+                        key={level}
+                        onClick={() => setPriority(level)}
+                        type="button"
+                        className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors ${
+                          priority === level 
+                            ? level === "Critical" ? "bg-danger text-white shadow-sm" :
+                              level === "High" ? "bg-amber-500 text-white shadow-sm" :
+                              "bg-foreground text-background shadow-sm"
+                            : "text-muted-foreground hover:bg-muted"
+                        }`}
+                      >
+                        {level}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="border-2 border-dashed border-muted-foreground/30 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-muted/30 transition-colors">
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground mb-3"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                   <span className="text-base font-bold text-foreground">Add Photo/Video Evidence</span>
@@ -100,7 +197,7 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
 
             {/* Poll Specific Fields */}
             {activeTab === "POLL" && (
-              <div className="space-y-3 animate-in fade-in slide-in-from-top-2 border border-muted rounded-xl p-5 mb-4 bg-muted/10">
+              <div className="space-y-4 animate-in fade-in slide-in-from-top-2 border border-muted rounded-xl p-5 mb-4 bg-muted/10">
                 <h4 className="font-bold text-foreground mb-2">Poll Options</h4>
                 {pollOptions.map((opt, i) => (
                   <div key={i} className="flex gap-2 items-center">
@@ -109,6 +206,7 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
                         type="text" 
                         placeholder={`Option ${i + 1}`} 
                         value={opt}
+                        aria-label={`Poll Option ${i + 1}`}
                         onChange={(e) => {
                           const newOpts = [...pollOptions];
                           newOpts[i] = e.target.value;
@@ -118,26 +216,40 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
                       />
                     </div>
                     {i >= 2 && (
-                      <button onClick={() => handleRemoveOption(i)} className="p-3 text-danger hover:bg-danger/10 rounded-full transition-colors">
+                      <button onClick={() => handleRemoveOption(i)} aria-label={`Remove option ${i + 1}`} className="p-3 text-danger hover:bg-danger/10 rounded-full transition-colors">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                       </button>
                     )}
                   </div>
                 ))}
                 {pollOptions.length < 5 && (
-                  <button onClick={handleAddOption} className="text-accent font-bold text-sm flex items-center gap-1.5 hover:underline mt-2">
+                  <button onClick={handleAddOption} type="button" className="text-accent font-bold text-sm flex items-center gap-1.5 hover:underline mt-2">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     Add Option
                   </button>
                 )}
                 
-                <div className="border-t border-muted pt-4 mt-5 flex items-center justify-between">
-                   <span className="text-base font-semibold text-foreground">Poll Duration</span>
-                   <select className="bg-background border border-muted px-4 py-2 rounded-xl text-base font-bold outline-none cursor-pointer text-foreground hover:bg-muted/50 transition-colors">
-                     <option>1 Day</option>
-                     <option>3 Days</option>
-                     <option>7 Days</option>
-                   </select>
+                <div className="border-t border-muted pt-4 mt-5 space-y-4">
+                  <div className="flex items-center justify-between">
+                     <span className="text-sm font-semibold text-foreground">Poll Duration</span>
+                     <select aria-label="Poll Duration" className="bg-background border border-muted px-3 py-1.5 rounded-lg text-sm font-bold outline-none cursor-pointer text-foreground hover:bg-muted/50 transition-colors">
+                       <option>1 Day</option>
+                       <option>3 Days</option>
+                       <option>7 Days</option>
+                     </select>
+                  </div>
+                  <div className="flex items-center justify-between">
+                     <span className="text-sm font-semibold text-foreground">Allow multiple choices</span>
+                     <button 
+                       type="button" 
+                       role="switch" 
+                       aria-checked={allowMultiVote}
+                       onClick={() => setAllowMultiVote(!allowMultiVote)}
+                       className={`w-11 h-6 rounded-full transition-colors relative ${allowMultiVote ? 'bg-accent' : 'bg-muted-foreground/30'}`}
+                     >
+                       <div className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${allowMultiVote ? 'translate-x-5' : ''}`}></div>
+                     </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -145,10 +257,12 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 px-6 flex items-center justify-between">
+        <div className="p-4 px-6 border-t border-muted bg-background/50 flex flex-col sm:flex-row gap-4 items-center justify-between">
            <div className="flex gap-2">
              <button 
                 onClick={() => setActiveTab("UPDATE")}
+                aria-label="Switch to Standard Post"
+                aria-pressed={activeTab === "UPDATE"}
                 className={`p-3 rounded-full transition-colors ${activeTab === "UPDATE" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"}`}
                 title="Standard Update"
              >
@@ -156,6 +270,8 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
              </button>
              <button 
                 onClick={() => setActiveTab("COMPLAINT")}
+                aria-label="Switch to Complaint"
+                aria-pressed={activeTab === "COMPLAINT"}
                 className={`p-3 rounded-full transition-colors ${activeTab === "COMPLAINT" ? "bg-amber-500/10 text-amber-600" : "text-muted-foreground hover:bg-muted"}`}
                 title="File a Complaint"
              >
@@ -163,23 +279,47 @@ export default function CreatePostModal({ isOpen, onClose, defaultType = "UPDATE
              </button>
              <button 
                 onClick={() => setActiveTab("POLL")}
+                aria-label="Switch to Poll"
+                aria-pressed={activeTab === "POLL"}
                 className={`p-3 rounded-full transition-colors ${activeTab === "POLL" ? "bg-accent/10 text-accent" : "text-muted-foreground hover:bg-muted"}`}
                 title="Create a Poll"
              >
                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
              </button>
              <div className="w-px h-8 bg-muted mx-1 self-center"></div>
-             <button className="p-3 text-muted-foreground hover:bg-muted rounded-full transition-colors" title="Add Media">
+             <button aria-label="Add Media" className="p-3 text-muted-foreground hover:bg-muted rounded-full transition-colors" title="Add Media">
                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
              </button>
            </div>
            
-           <button 
-             onClick={onClose}
-             className="px-6 py-2.5 rounded-full font-bold text-white bg-foreground hover:bg-foreground/90 transition-all active:scale-95 shadow-sm"
-           >
-             Post
-           </button>
+           <div className="flex items-center gap-4">
+             {/* Character Counter */}
+             <div className={`text-sm font-medium ${isOverLimit ? 'text-danger' : 'text-muted-foreground'}`}>
+               {postText.length} / {maxChars}
+             </div>
+             
+             {/* Circular Progress (Visual only) */}
+             <div className="relative w-6 h-6 hidden sm:block">
+               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                 <path className="text-muted/50" strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                 <path 
+                   className={isOverLimit ? "text-danger" : "text-primary"} 
+                   strokeDasharray={`${Math.min((postText.length / maxChars) * 100, 100)}, 100`} 
+                   strokeWidth="3" strokeLinecap="round" stroke="currentColor" fill="none" 
+                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" 
+                 />
+               </svg>
+             </div>
+
+             <button 
+               onClick={onClose}
+               disabled={postText.trim().length === 0 || isOverLimit}
+               aria-disabled={postText.trim().length === 0 || isOverLimit}
+               className="px-6 py-2.5 rounded-full font-bold text-white bg-foreground hover:bg-foreground/90 transition-all active:scale-95 shadow-sm disabled:opacity-50 disabled:active:scale-100 disabled:hover:bg-foreground"
+             >
+               Post
+             </button>
+           </div>
         </div>
 
       </div>
