@@ -51,9 +51,23 @@ export default function Navbar() {
               <Link href="/login" className="text-sm font-medium hover:text-primary transition-colors">
                 Sign In
               </Link>
-              <Link href="/signup" className="rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background hover:bg-foreground/90 transition-colors shadow-sm">
-                Create Organization
-              </Link>
+              
+              {/* Organization Dropdown */}
+              <div className="relative group">
+                <button className="flex items-center gap-1.5 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background hover:bg-foreground/90 transition-colors shadow-sm">
+                  Organizations
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                
+                <div className="absolute right-0 mt-1 w-48 bg-background border border-muted rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 flex flex-col overflow-hidden">
+                  <Link href="/organizations/login" className="px-4 py-3 text-sm font-semibold hover:bg-muted transition-colors text-foreground">
+                    Organization Login
+                  </Link>
+                  <Link href="/organizations/create" className="px-4 py-3 text-sm font-medium hover:bg-muted transition-colors border-t border-muted text-muted-foreground">
+                    Register Organization
+                  </Link>
+                </div>
+              </div>
             </div>
             
             {/* Mobile simplified actions */}
@@ -99,8 +113,9 @@ export default function Navbar() {
             </div>
             
             <div className="p-4 border-t border-muted flex flex-col gap-3">
-              <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full py-3 text-center rounded-xl border border-muted font-bold hover:bg-muted transition-colors">Sign In</Link>
-              <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)} className="w-full py-3 text-center rounded-xl bg-foreground text-background font-bold hover:bg-foreground/90 transition-colors">Create Organization</Link>
+              <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full py-3 text-center rounded-xl border border-muted font-bold hover:bg-muted transition-colors text-foreground">Sign In</Link>
+              <Link href="/organizations/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full py-3 text-center rounded-xl bg-foreground text-background font-bold hover:bg-foreground/90 transition-colors">Organization Portal</Link>
+              <Link href="/organizations/create" onClick={() => setIsMobileMenuOpen(false)} className="w-full py-2.5 text-center rounded-xl border border-muted font-semibold hover:bg-muted transition-colors text-muted-foreground text-sm">Register Organization</Link>
             </div>
           </div>
         </div>
