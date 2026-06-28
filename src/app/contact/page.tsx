@@ -113,8 +113,8 @@ export default function ContactSalesPage() {
                  <div className="flex flex-col gap-2">
                     <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider flex items-center gap-2"><Building size={14}/> Organization Type</label>
                     <div className="relative">
-                      <select required className="w-full bg-zinc-50 border border-zinc-200 px-4 py-3.5 rounded-2xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white transition-all font-medium appearance-none">
-                        <option value="" disabled selected>Select an industry...</option>
+                      <select required defaultValue="" className="w-full bg-zinc-50 border border-zinc-200 px-4 py-3.5 rounded-2xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white transition-all font-medium appearance-none">
+                        <option value="" disabled>Select an industry...</option>
                         <option value="education">Education (School/University)</option>
                         <option value="government">Government</option>
                         <option value="healthcare">Healthcare</option>
