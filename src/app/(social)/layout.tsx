@@ -7,10 +7,10 @@ export default function SocialLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex flex-col min-h-screen pb-16 md:pb-0">
-      <div className="mx-auto max-w-[1440px] px-2 sm:px-4 lg:px-6 flex justify-start lg:gap-6 w-full flex-1">
-        <LeftSidebar />
-        <div className="flex-1 min-w-0 w-full mb-12 mt-6">
+    <div className="flex min-h-screen pb-16 md:pb-0 w-full">
+      <LeftSidebar />
+      <div className="flex-1 flex flex-col min-w-0 w-full">
+        <div className="mx-auto w-full max-w-[1352px] px-2 sm:px-4 lg:px-6 mt-6 mb-12">
           {children}
         </div>
       </div>
