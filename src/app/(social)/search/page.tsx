@@ -64,8 +64,8 @@ export default function SearchPage() {
     <main className="flex min-h-screen flex-col bg-background text-foreground">
 
       {/* Command Center: Search Header (Sticky) */}
-      <div className="sticky top-[64px] sm:top-[88px] z-30 bg-background/85 backdrop-blur-xl border-b border-muted pt-6 pb-4">
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
+      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-muted pb-4 pt-6 -mt-6 -mx-2 sm:-mx-4 lg:-mx-6 px-2 sm:px-4 lg:px-6">
+        <div className="mx-auto max-w-[1440px]">
           
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             {/* Massive Search Bar */}
@@ -127,7 +127,7 @@ export default function SearchPage() {
           <div className="flex gap-8">
             
             {/* Left Sidebar (Filters) - Desktop Only */}
-            <aside className="hidden lg:block w-[260px] shrink-0 sticky top-[180px] h-fit">
+            <aside className="hidden lg:block w-[260px] shrink-0 sticky top-[160px] h-fit">
               
               <div className="mb-8">
                 <h3 className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-4">Content Type</h3>
