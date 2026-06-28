@@ -1,4 +1,3 @@
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 
@@ -19,7 +18,6 @@ const categories = [
 export default function CategoriesHub() {
   return (
     <main className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar />
 
       <section className="py-20 bg-muted/20 border-b border-muted">
         <div className="mx-auto max-w-7xl px-6 text-center">

@@ -1,5 +1,4 @@
 import BottomNav from "@/components/layout/BottomNav";
-import Navbar from "@/components/layout/Navbar";
 import LeftSidebar from "@/components/feed/LeftSidebar";
 
 export default function SocialLayout({
@@ -9,10 +8,9 @@ export default function SocialLayout({
 }>) {
   return (
     <div className="flex flex-col min-h-screen pb-16 md:pb-0">
-      <Navbar />
-      <div className="mx-auto max-w-[1440px] px-2 sm:px-4 lg:px-6 flex justify-start lg:gap-6 w-full mt-6 flex-1">
+      <div className="mx-auto max-w-[1440px] px-2 sm:px-4 lg:px-6 flex justify-start lg:gap-6 w-full flex-1">
         <LeftSidebar />
-        <div className="flex-1 min-w-0 w-full mb-12">
+        <div className="flex-1 min-w-0 w-full mb-12 mt-6">
           {children}
         </div>
       </div>

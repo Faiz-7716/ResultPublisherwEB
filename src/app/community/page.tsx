@@ -1,10 +1,8 @@
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export default function CommunityPage() {
   return (
     <main className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar />
 
       <section className="bg-muted/20 border-b border-muted py-12">
         <div className="mx-auto max-w-5xl px-6">

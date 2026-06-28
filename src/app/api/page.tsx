@@ -1,10 +1,8 @@
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export default function ApiPage() {
   return (
     <main className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar />
       <section className="bg-foreground text-background py-16">
         <div className="mx-auto max-w-7xl px-6">
           <h1 className="text-4xl font-extrabold tracking-tight mb-4">ResultHub API</h1>

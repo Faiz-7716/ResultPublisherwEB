@@ -1,4 +1,3 @@
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 
@@ -14,7 +13,6 @@ export default function OrganizationsPage() {
 
   return (
     <main className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar />
 
       <section className="bg-foreground text-background py-16">
         <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center justify-between gap-8">

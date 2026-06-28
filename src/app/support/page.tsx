@@ -1,10 +1,8 @@
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export default function SupportPage() {
   return (
     <main className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar />
       <div className="flex-1 mx-auto max-w-4xl px-6 py-16 w-full">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold tracking-tight mb-4">Support Center</h1>

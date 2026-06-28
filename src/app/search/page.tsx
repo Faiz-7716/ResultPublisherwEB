@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export default function SearchPage() {
@@ -63,7 +62,6 @@ export default function SearchPage() {
 
   return (
     <main className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar />
 
       {/* Command Center: Search Header (Sticky) */}
       <div className="sticky top-[64px] sm:top-[88px] z-30 bg-background/85 backdrop-blur-xl border-b border-muted pt-6 pb-4">

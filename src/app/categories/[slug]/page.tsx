@@ -1,4 +1,3 @@
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -27,7 +26,6 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
 
   return (
     <main className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar />
 
       {/* Hero Banner */}
       <section className="relative py-24 border-b border-muted overflow-hidden">

@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { useState, useRef, useEffect } from "react";
 
@@ -28,7 +27,6 @@ export default function CreateOrganizationPage() {
 
   return (
     <main className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar />
       <div className="flex-1 py-16 px-6 bg-muted/10 border-b border-muted">
         <div className="mx-auto max-w-3xl bg-background rounded-3xl p-8 md:p-12 border border-muted shadow-sm hover:shadow-md transition-shadow duration-500">
           <div className="mb-10">

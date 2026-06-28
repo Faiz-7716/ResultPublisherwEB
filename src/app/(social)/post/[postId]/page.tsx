@@ -1,4 +1,3 @@
-import Navbar from "@/components/layout/Navbar";
 import PostCard from "@/components/feed/PostCard";
 import Link from "next/link";
 

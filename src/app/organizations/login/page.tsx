@@ -1,10 +1,8 @@
 import Link from "next/link";
-import Navbar from "@/components/layout/Navbar";
 
 export default function OrganizationLoginPage() {
   return (
     <main className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar />
       <div className="flex-1 flex items-center justify-center py-12 px-6 bg-muted/10">
         <div className="w-full max-w-md bg-background rounded-3xl p-8 border border-muted shadow-sm">
           <div className="text-center mb-8">

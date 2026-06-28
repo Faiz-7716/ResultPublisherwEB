@@ -1,10 +1,8 @@
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export default function PrivacyPage() {
   return (
     <main className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar />
       <div className="flex-1 mx-auto max-w-3xl px-6 py-16 w-full">
         <h1 className="text-4xl font-extrabold tracking-tight mb-8">Privacy Policy</h1>
         <div className="prose prose-sm sm:prose-base dark:prose-invert text-muted-foreground space-y-6">
