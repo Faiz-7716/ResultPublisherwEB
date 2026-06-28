@@ -1,6 +1,5 @@
 "use client";
 
-import Footer from "@/components/layout/Footer";
 import { useState, useRef, useEffect } from "react";
 
 export default function CreateOrganizationPage() {
@@ -131,7 +130,6 @@ export default function CreateOrganizationPage() {
           </form>
         </div>
       </div>
-      <Footer />
-    </main>
+      </main>
   );
 }

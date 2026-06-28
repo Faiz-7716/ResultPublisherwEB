@@ -1,4 +1,3 @@
-import Footer from "@/components/layout/Footer";
 
 export default function CommunityPage() {
   return (
@@ -85,7 +84,6 @@ export default function CommunityPage() {
         </aside>
       </section>
 
-      <Footer />
-    </main>
+      </main>
   );
 }

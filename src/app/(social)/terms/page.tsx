@@ -1,4 +1,3 @@
-import Footer from "@/components/layout/Footer";
 
 export default function TermsPage() {
   return (
@@ -15,7 +14,6 @@ export default function TermsPage() {
           <p>You agree to not use the Service to upload, post, email, transmit or otherwise make available any Content that is unlawful, harmful, threatening, abusive, harassing, tortious, defamatory, vulgar, obscene, libelous, invasive of another's privacy, hateful, or racially, ethnically or otherwise objectionable.</p>
         </div>
       </div>
-      <Footer />
-    </main>
+      </main>
   );
 }

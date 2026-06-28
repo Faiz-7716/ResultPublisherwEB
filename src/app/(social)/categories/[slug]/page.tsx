@@ -1,4 +1,3 @@
-import Footer from "@/components/layout/Footer";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
@@ -134,7 +133,6 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
         </div>
       </div>
 
-      <Footer />
-    </main>
+      </main>
   );
 }

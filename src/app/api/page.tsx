@@ -1,4 +1,3 @@
-import Footer from "@/components/layout/Footer";
 
 export default function ApiPage() {
   return (
@@ -40,7 +39,6 @@ export default function ApiPage() {
           </div>
         </div>
       </div>
-      <Footer />
-    </main>
+      </main>
   );
 }

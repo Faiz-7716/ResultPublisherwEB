@@ -1,4 +1,3 @@
-import Footer from "@/components/layout/Footer";
 
 export default function GuidelinesPage() {
   return (
@@ -16,7 +15,6 @@ export default function GuidelinesPage() {
           <p>If you see content that violates these guidelines, use the "Report" flag mechanism. Our moderation team reviews flagged content within 24 hours.</p>
         </div>
       </div>
-      <Footer />
-    </main>
+      </main>
   );
 }

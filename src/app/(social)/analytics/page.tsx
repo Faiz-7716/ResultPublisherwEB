@@ -1,4 +1,3 @@
-import Footer from "@/components/layout/Footer";
 
 export default function AnalyticsPage() {
   return (
@@ -64,7 +63,6 @@ export default function AnalyticsPage() {
         </div>
       </section>
 
-      <Footer />
-    </main>
+      </main>
   );
 }

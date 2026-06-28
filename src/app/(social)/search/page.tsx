@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Footer from "@/components/layout/Footer";
 
 export default function SearchPage() {
   const [activeTab, setActiveTab] = useState("All");
@@ -237,7 +236,6 @@ export default function SearchPage() {
         </div>
       </div>
 
-      <Footer />
-    </main>
+      </main>
   );
 }

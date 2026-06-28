@@ -1,4 +1,3 @@
-import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 
 const categories = [
@@ -48,7 +47,6 @@ export default function CategoriesHub() {
         </div>
       </section>
 
-      <Footer />
-    </main>
+      </main>
   );
 }

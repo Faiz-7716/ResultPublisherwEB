@@ -1,4 +1,3 @@
-import Footer from "@/components/layout/Footer";
 
 export default function SupportPage() {
   return (
@@ -32,7 +31,6 @@ export default function SupportPage() {
           </div>
         </div>
       </div>
-      <Footer />
-    </main>
+      </main>
   );
 }

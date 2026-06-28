@@ -1,4 +1,3 @@
-import Footer from "@/components/layout/Footer";
 
 export default function PrivacyPage() {
   return (
@@ -15,7 +14,6 @@ export default function PrivacyPage() {
           <p>We will only use your personal data when the law allows us to. Most commonly, we will use your personal data to perform the contract we are about to enter into or have entered into with you, or where it is necessary for our legitimate interests.</p>
         </div>
       </div>
-      <Footer />
-    </main>
+      </main>
   );
 }
